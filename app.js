@@ -11,23 +11,27 @@ const express = require("express");
 const app = express();
 const routes = require("./routes/login");
 const connectDB = require("./db/connect");
+const notFoundMiddleWare = require("./middleware/not-found");
+const errorHandlerMiddleWare = require("./middleware/error-handler");
 
 app
   .use(express.static("./public"))
-  .use(express.urlencoded([{ extended: false }, express.json()]))
-  .use("/api/v1", routes);
-//   .use(errorHandlerMiddleWare);
-//  .use(notFoundMiddleWare);
+  .use([express.urlencoded({ extended: false }), express.json()])
+  .use("/api/v1", routes)
+  .use(errorHandlerMiddleWare)
+  .use(notFoundMiddleWare);
 
 const port = process.env.PORT || 3000;
 
 const start = async () => {
   try {
     connectDB(process.env.MONGO_URL);
-    app.listen(port,() => {
-        console.log(`server is listening at port ${port}`);
-    })
+    app.listen(port, () => {
+      console.log(`server is listening at port ${port}`);
+    });
   } catch (err) {
-      console.error(err);
+    console.error(err);
   }
 };
+
+start();
