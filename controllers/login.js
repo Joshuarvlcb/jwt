@@ -30,8 +30,8 @@ const dashboard = (req, res) => {
   // throw new CustomAPIError("testing api error", 505);
   res.json({
     status: 200,
-    msg: "success",
-    secret: "secret number",
+    msg: req.user.username,
+    secret: req.headers.authorization,
   });
 };
 
